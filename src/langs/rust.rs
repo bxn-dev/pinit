@@ -18,10 +18,12 @@ fn init(path: &Path) -> Result<(), String> {
 }
 
 pub fn create_project(path: &Path, template: Option<&str>) -> Result<(), String> {
-    if let Some(t) = template {
-        println!("Using Rust template: {}", t);
-    } else {
-        println!("Using default Rust template");
+    
+    init(&path);
+    match template {
+        Some(template) => {
+          
+        },
+        None => Ok(())
     }
-    init(path)
 }
