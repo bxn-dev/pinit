@@ -2,9 +2,14 @@ use clap::{Parser, Subcommand};
 use std::path::PathBuf;
 
 mod langs;
+mod templates;
 
 #[derive(Parser, Debug)]
-#[command(about = "A tool to initialize projects of various kinds.", version)]
+#[command(
+    name = "Entremetier",
+    about = "A side-dish chef for preparing project foundations from TOML templates.",
+    version
+)]
 struct Cli {
     #[command(subcommand)]
     command: Langs,
@@ -12,22 +17,23 @@ struct Cli {
 
 #[derive(Subcommand, Debug)]
 enum Langs {
-    /// initialize a new rust project
+    /// Initialize a new Rust project.
     Rust {
-        /// the template that should be used
+        /// The TOML template that should be used.
         #[arg(short, long)]
         template: Option<String>,
 
-        /// Path used to initialize the project
+        /// Path used to initialize the project.
         path: PathBuf,
     },
 
+    /// Initialize a new Python project.
     Python {
-        /// the template that should be used
+        /// The TOML template that should be used.
         #[arg(short, long)]
         template: Option<String>,
 
-        /// Path used to initialize the project
+        /// Path used to initialize the project.
         path: PathBuf,
     },
 }
@@ -35,14 +41,17 @@ enum Langs {
 fn main() {
     let cli: Cli = Cli::parse();
 
-    match cli.command {
+    let result = match cli.command {
         Langs::Rust { template, path } => {
-            if let Err(e) = langs::rust::create_project(path.as_path(), template.as_deref()) {
-                eprintln!("Error creating Rust project: {}", e);
-            }
+            langs::rust::create_project(path.as_path(), template.as_deref())
         }
         Langs::Python { template, path } => {
-            langs::python::create_project(path.as_path(), template.as_deref());
+            langs::python::create_project(path.as_path(), template.as_deref())
         }
+    };
+
+    if let Err(error) = result {
+        eprintln!("Error creating project: {}", error);
+        std::process::exit(1);
     }
 }

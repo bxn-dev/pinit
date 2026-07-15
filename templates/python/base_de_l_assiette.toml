@@ -1,0 +1,35 @@
+name = "base_de_l_assiette"
+description = "Base de l'assiette for a minimal Python CLI project"
+
+[variables]
+project_name = "{{project_name}}"
+package_name = "{{package_name}}"
+
+[[directories]]
+path = "{{package_name}}"
+
+[[files]]
+path = "pyproject.toml"
+content = '''
+[project]
+name = "{{project_name}}"
+version = "0.1.0"
+description = ""
+requires-python = ">=3.12"
+'''
+
+[[files]]
+path = "{{package_name}}/__init__.py"
+content = '''
+'''
+
+[[files]]
+path = "{{package_name}}/__main__.py"
+content = '''
+def main() -> None:
+    print("Hello from {{project_name}}!")
+
+
+if __name__ == "__main__":
+    main()
+'''
